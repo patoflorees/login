@@ -11,11 +11,28 @@
 
 <div class="content">
     <h1>Perfil</h1>
-    <p>Información del usuario.</p>
+    <p>Pokémon desde PokeAPI:</p>
+
+    <div id="pokemonCard">
+        <h2 id="pokemonName"></h2>
+        <img id="pokemonImage" width="200">
+    </div>
 </div>
 
 <div id="footerContainer"></div>
 
 <script src="app.js"></script>
+
+<script>
+fetch("https://pokeapi.co/api/v2/pokemon/pikachu")
+.then(function(response){
+    return response.json();
+})
+.then(function(data){
+    document.getElementById("pokemonName").textContent = data.name.toUpperCase();
+    document.getElementById("pokemonImage").src = data.sprites.front_default;
+});
+</script>
+
 </body>
 </html>
