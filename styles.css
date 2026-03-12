@@ -89,3 +89,108 @@ button {
 .pokemon-card h2 {
     text-transform: capitalize;
 }
+
+.battle-container{
+display:flex;
+justify-content:space-around;
+margin-top:30px;
+}
+
+.fighter{
+background:white;
+padding:20px;
+border-radius:10px;
+text-align:center;
+width:250px;
+box-shadow:0 4px 8px rgba(0,0,0,0.1);
+}
+
+.fighter img{
+width:120px;
+}
+
+.fighter ul{
+list-style:none;
+padding:0;
+}
+
+.battle-area{
+
+display:flex;
+justify-content:space-around;
+margin-bottom:20px;
+
+}
+
+.pokemon-box{
+
+background:white;
+padding:20px;
+width:250px;
+text-align:center;
+border-radius:10px;
+box-shadow:0 4px 8px rgba(0,0,0,0.1);
+
+}
+
+.pokemon-box img{
+
+width:120px;
+
+}
+
+.battle-log{
+
+background:white;
+padding:15px;
+margin:20px auto;
+width:60%;
+text-align:center;
+font-weight:bold;
+border-radius:10px;
+box-shadow:0 4px 8px rgba(0,0,0,0.1);
+
+}
+
+.battle-area{
+display:flex;
+justify-content:space-around;
+margin-bottom:20px;
+}
+
+.pokemon-box{
+background:white;
+padding:20px;
+width:250px;
+text-align:center;
+border-radius:10px;
+box-shadow:0 4px 8px rgba(0,0,0,0.1);
+}
+
+.pokemon-box img{
+width:120px;
+}
+
+.battle-log{
+background:white;
+padding:15px;
+margin:20px auto;
+width:60%;
+text-align:center;
+font-weight:bold;
+border-radius:10px;
+box-shadow:0 4px 8px rgba(0,0,0,0.1);
+}
+
+.winner-area{
+text-align:center;
+margin-top:30px;
+padding:20px;
+background:white;
+border-radius:10px;
+box-shadow:0 4px 8px rgba(0,0,0,0.1);
+}
+
+.winner-area img{
+margin-top:10px;
+}

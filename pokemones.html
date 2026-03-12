@@ -10,15 +10,18 @@
 <div id="headerContainer"></div>
 
 <div class="content">
-    <h1>Pokemones</h1>
+<h1>Pokemones</h1>
 
-    <input type="text" id="searchInput" placeholder="Buscar por nombre">
-    
-    <select id="typeFilter">
-        <option value="">Filtrar por tipo</option>
-    </select>
+<p>Selecciona 2 Pokémon para pelear</p>
 
-    <div id="pokemonContainer" class="card-container"></div>
+<input type="text" id="searchInput" placeholder="Buscar por nombre">
+
+<select id="typeFilter">
+<option value="">Filtrar por tipo</option>
+</select>
+
+<div id="pokemonContainer" class="card-container"></div>
+
 </div>
 
 <div id="footerContainer"></div>
@@ -28,121 +31,148 @@
 <script>
 
 var allPokemons = [];
+var seleccionados = [];
 
 fetch("https://pokeapi.co/api/v2/pokemon?limit=150")
 .then(function(res){
-    return res.json();
+return res.json();
 })
 .then(function(data){
 
-    var promises = [];
+var promises = [];
 
-    for(var i=0;i<data.results.length;i++){
-        promises.push(fetch(data.results[i].url).then(function(r){ return r.json(); }));
-    }
+for(var i=0;i<data.results.length;i++){
+promises.push(fetch(data.results[i].url).then(function(r){ return r.json(); }));
+}
 
-    Promise.all(promises).then(function(pokemonData){
+Promise.all(promises).then(function(pokemonData){
 
-        allPokemons = pokemonData;
-        mostrarPokemones(allPokemons);
-        cargarTipos(allPokemons);
+allPokemons = pokemonData;
+mostrarPokemones(allPokemons);
+cargarTipos(allPokemons);
 
-    });
+});
 
 });
 
 function mostrarPokemones(lista){
 
-    var container = document.getElementById("pokemonContainer");
-    container.innerHTML = "";
+var container = document.getElementById("pokemonContainer");
+container.innerHTML = "";
 
-    for(var i=0;i<lista.length;i++){
+for(var i=0;i<lista.length;i++){
 
-        var tipos = "";
-        for(var j=0;j<lista[i].types.length;j++){
-            tipos += lista[i].types[j].type.name + " ";
-        }
+var tipos = "";
 
-        var movimientos = "";
-        for(var k=0;k<4 && k<lista[i].moves.length;k++){
-            movimientos += "<li>"+lista[i].moves[k].move.name+"</li>";
-        }
+for(var j=0;j<lista[i].types.length;j++){
+tipos += lista[i].types[j].type.name + " ";
+}
 
-        var stats = "";
-        for(var s=0;s<lista[i].stats.length;s++){
-            stats += "<li>"+lista[i].stats[s].stat.name+": "+lista[i].stats[s].base_stat+"</li>";
-        }
+var card = "<div class='pokemon-card'>";
+card += "<img src='"+lista[i].sprites.front_default+"'>";
+card += "<h2>"+lista[i].name+"</h2>";
+card += "<p><strong>ID:</strong> "+lista[i].id+"</p>";
+card += "<p><strong>Tipo:</strong> "+tipos+"</p>";
 
-        var card = "<div class='pokemon-card'>";
-        card += "<img src='"+lista[i].sprites.front_default+"'>";
-        card += "<h2>"+lista[i].name+"</h2>";
-        card += "<p><strong>ID:</strong> "+lista[i].id+"</p>";
-        card += "<p><strong>Tipo:</strong> "+tipos+"</p>";
-        card += "<p><strong>Movimientos:</strong></p><ul>"+movimientos+"</ul>";
-        card += "<p><strong>Stats:</strong></p><ul>"+stats+"</ul>";
-        card += "</div>";
+card += "<button onclick='seleccionarPokemon("+lista[i].id+")'>Elegir para pelea</button>";
 
-        container.innerHTML += card;
-    }
+card += "</div>";
+
+container.innerHTML += card;
+
+}
+
+}
+
+function seleccionarPokemon(id){
+
+if(seleccionados.length < 2){
+
+seleccionados.push(id);
+alert("Pokemon seleccionado");
+
+}
+
+if(seleccionados.length === 2){
+
+localStorage.setItem("pokemon1", seleccionados[0]);
+localStorage.setItem("pokemon2", seleccionados[1]);
+
+window.location.href = "pelea.html";
+
+}
+
 }
 
 function cargarTipos(lista){
 
-    var tiposUnicos = [];
+var tiposUnicos = [];
 
-    for(var i=0;i<lista.length;i++){
-        for(var j=0;j<lista[i].types.length;j++){
-            var tipo = lista[i].types[j].type.name;
-            if(tiposUnicos.indexOf(tipo) === -1){
-                tiposUnicos.push(tipo);
-            }
-        }
-    }
+for(var i=0;i<lista.length;i++){
 
-    var select = document.getElementById("typeFilter");
+for(var j=0;j<lista[i].types.length;j++){
 
-    for(var i=0;i<tiposUnicos.length;i++){
-        var option = document.createElement("option");
-        option.value = tiposUnicos[i];
-        option.textContent = tiposUnicos[i];
-        select.appendChild(option);
-    }
+var tipo = lista[i].types[j].type.name;
+
+if(tiposUnicos.indexOf(tipo) === -1){
+tiposUnicos.push(tipo);
+}
+
+}
+
+}
+
+var select = document.getElementById("typeFilter");
+
+for(var i=0;i<tiposUnicos.length;i++){
+
+var option = document.createElement("option");
+
+option.value = tiposUnicos[i];
+option.textContent = tiposUnicos[i];
+
+select.appendChild(option);
+
+}
+
 }
 
 document.getElementById("searchInput").addEventListener("keyup", function(){
 
-    var texto = this.value.toLowerCase();
+var texto = this.value.toLowerCase();
 
-    var filtrados = allPokemons.filter(function(p){
-        return p.name.includes(texto);
-    });
+var filtrados = allPokemons.filter(function(p){
+return p.name.includes(texto);
+});
 
-    mostrarPokemones(filtrados);
+mostrarPokemones(filtrados);
 
 });
 
 document.getElementById("typeFilter").addEventListener("change", function(){
 
-    var tipoSeleccionado = this.value;
+var tipoSeleccionado = this.value;
 
-    if(tipoSeleccionado === ""){
-        mostrarPokemones(allPokemons);
-        return;
-    }
+if(tipoSeleccionado === ""){
+mostrarPokemones(allPokemons);
+return;
+}
 
-    var filtrados = allPokemons.filter(function(p){
+var filtrados = allPokemons.filter(function(p){
 
-        for(var i=0;i<p.types.length;i++){
-            if(p.types[i].type.name === tipoSeleccionado){
-                return true;
-            }
-        }
+for(var i=0;i<p.types.length;i++){
 
-        return false;
+if(p.types[i].type.name === tipoSeleccionado){
+return true;
+}
 
-    });
+}
 
-    mostrarPokemones(filtrados);
+return false;
+
+});
+
+mostrarPokemones(filtrados);
 
 });
 
